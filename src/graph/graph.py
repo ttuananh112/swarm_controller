@@ -7,7 +7,7 @@ import pandas as pd
 
 from src.common.constants import VerticesColumns, EdgesColumns
 from src.graph.exception import NodeNotFound
-from src.graph.models import Node, Position
+from src.models.node import Node, Position
 
 INFINITY = float("inf")
 
