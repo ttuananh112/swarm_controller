@@ -38,25 +38,58 @@ class Mediator:
         self.bias_intersection = bias_intersection
         self.padding_value = INFINITY
 
-    def get_robot_container(self):
+    def get_robot_container(self) -> Dict[int, Robot]:
+        """
+        Get robot container
+        Returns:
+            (Dict[int, Robot])
+        """
         return self.robot_container
 
     def add_robot(self, robot: Robot):
+        """
+        Add new robot to self.robot_container
+        Args:
+            robot (Robot): new robot
+        """
         if robot.id_robot not in self.robot_container:
             self.robot_container[robot.id_robot] = robot
             self.global_paths = self.get_global_paths()
         else:
-            logger.info(f"Robot with id = {robot.id_robot} exists")
+            logger.error(f"Robot with id = {robot.id_robot} exists")
 
     def remove_robot_by_id(self, id_robot: int):
+        """
+        Remove robot from self.robot_container by its id_robot
+        Args:
+            id_robot (int): id of robot
+        """
         if id_robot in self.robot_container:
             del self.robot_container[id_robot]
             self.global_paths = self.get_global_paths()
         else:
-            logger.info(f"Robot with id = {id_robot} not found. Can not remove")
+            logger.error(f"Robot with id = {id_robot} not found. Can not remove")
 
     def get_global_paths(self) -> List[List[int]]:
+        """
+        Get list of global paths
+        Returns:
+            (List[List[int]])
+        """
         return [robot.get_current_to_goal() for robot in self.robot_container.values()]
+
+    def update_global_path(self, id_robot: int, global_path: List[int]):
+        """
+        Update global path of robot by id_robot
+        Args:
+            id_robot (int): id of robot to be updated global path
+            global_path (List[int]): new global path
+        """
+        if id_robot in self.robot_container:
+            self.robot_container[id_robot].set_global_path(global_path)
+            self.global_paths = self.get_global_paths()
+        else:
+            logger.error(f"Robot with id = {id_robot} not found. Can not update global path")
 
     def pad(self, path: List[int]) -> np.ndarray:
         """

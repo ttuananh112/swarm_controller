@@ -21,7 +21,9 @@ if __name__ == "__main__":
     mediator.add_robot(Robot(id_robot=1, global_path=[i for i in astar.find_path(1, 10)]))
     mediator.add_robot(Robot(id_robot=2, global_path=[i for i in astar.find_path(6, 9)]))
     mediator.add_robot(Robot(id_robot=5, global_path=[i for i in astar.find_path(7, 9)]))
-    mediator.add_robot(Robot(id_robot=10, global_path=[i for i in astar.find_path(3, 2)]))
+
+    mediator.add_robot(Robot(id_robot=10, global_path=[]))
+    mediator.update_global_path(id_robot=10, global_path=[i for i in astar.find_path(3, 2)])
 
     local_paths = mediator.find_local_paths()
 
