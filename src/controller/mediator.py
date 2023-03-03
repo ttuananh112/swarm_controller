@@ -223,7 +223,7 @@ class Mediator:
         Returns:
             Dict: (id_robot, local_path)
         """
-        local_paths = self.cut_lookahead(global_paths=self.global_paths)
+        local_paths = self.cut_lookahead(global_paths=self.get_global_paths())
         local_paths = self.cut_if_meet_other_robot(local_paths=local_paths)
         local_paths = self.cut_in_intersection(local_paths=local_paths)
 

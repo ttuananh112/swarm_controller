@@ -18,9 +18,23 @@ if __name__ == "__main__":
     mediator.add_robot(Robot(id_robot=4, global_path=[]))
     mediator.update_global_path(id_robot=4, global_path=[i for i in astar.find_path(129, 13)])
 
-    local_paths = mediator.find_local_paths()
+    is_done = False
+    while len(mediator.get_robot_container()) > 0:
+        local_paths = mediator.find_local_paths()
+        print("Global paths:")
+        print({id_robot: robot.get_global_path() for id_robot, robot in mediator.get_robot_container().items()})
+        print("Local paths:")
+        print(local_paths)
+        print("_" * 10)
+        # update robot position
 
-    print("Global paths:")
-    print({id_robot: robot.get_global_path() for id_robot, robot in mediator.get_robot_container().items()})
-    print("Local paths:")
-    print(local_paths)
+        finished = []
+        for id_robot in mediator.get_robot_container().keys():
+            if mediator.get_robot_container()[id_robot].is_at_goal():
+                finished.append(id_robot)
+            else:
+                next_position = local_paths[id_robot][1] if len(local_paths[id_robot]) > 1 else local_paths[id_robot][0]
+                mediator.get_robot_container()[id_robot].set_current_position(next_position)
+        # delete finished
+        for i in finished:
+            mediator.remove_robot_by_id(i)
