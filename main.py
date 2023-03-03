@@ -3,13 +3,6 @@ from src.graph import Graph
 from src.models.robot import Robot
 
 if __name__ == "__main__":
-    # Graph:
-    # 1 -> 2 -> 3 -> 4
-    # ^    |         v
-    # 10   |         5
-    # ^    v         v
-    # 9 <- 8 <- 7 <- 6
-
     # TODO: unblock mechanism when deadlock
 
     graph = Graph()
@@ -17,13 +10,13 @@ if __name__ == "__main__":
 
     astar = AStar(graph=graph)
 
-    mediator = Mediator()
-    mediator.add_robot(Robot(id_robot=1, global_path=[i for i in astar.find_path(1, 10)]))
-    mediator.add_robot(Robot(id_robot=2, global_path=[i for i in astar.find_path(6, 9)]))
-    mediator.add_robot(Robot(id_robot=5, global_path=[i for i in astar.find_path(7, 9)]))
+    mediator = Mediator(lookahead=10, bias_intersection=1)
+    mediator.add_robot(Robot(id_robot=1, global_path=[i for i in astar.find_path(13, 156)]))
+    mediator.add_robot(Robot(id_robot=2, global_path=[i for i in astar.find_path(76, 13)]))
+    mediator.add_robot(Robot(id_robot=3, global_path=[i for i in astar.find_path(41, 108)]))
 
-    mediator.add_robot(Robot(id_robot=10, global_path=[]))
-    mediator.update_global_path(id_robot=10, global_path=[i for i in astar.find_path(3, 2)])
+    mediator.add_robot(Robot(id_robot=4, global_path=[]))
+    mediator.update_global_path(id_robot=4, global_path=[i for i in astar.find_path(129, 13)])
 
     local_paths = mediator.find_local_paths()
 
