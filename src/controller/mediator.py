@@ -21,7 +21,7 @@ class Mediator:
 
     def __init__(
             self,
-            robot_container: Dict[int, Robot] = {},
+            robot_container: Dict[int, Robot] = None,
             lookahead: int = 5,
             bias_intersection: int = 1
     ):
@@ -31,7 +31,7 @@ class Mediator:
             lookahead (int): number of steps in local path
             bias_intersection (int): bias of steps while checking intersection
         """
-        self.robot_container: Dict[int, Robot] = robot_container
+        self.robot_container: Dict[int, Robot] = robot_container or {}
         self.global_paths: List[List[int]] = self.get_global_paths()
 
         self.lookahead = lookahead
