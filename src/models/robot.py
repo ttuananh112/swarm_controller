@@ -22,6 +22,9 @@ class Robot:
         self.current_to_goal = []
         self.set_global_path(global_path)
 
+    def is_at_goal(self):
+        return len(self.current_to_goal) == 1
+
     def set_global_path(self, global_path: List[int]):
         """
         Set new global path
