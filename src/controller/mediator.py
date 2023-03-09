@@ -258,7 +258,4 @@ class Mediator:
                     self.robot_container[id_robot].set_current_position(next_id)
                     self.robot_container[id_robot].state.position = next_pos
 
-                print(self.robot_container[id_robot].state.position, self.robot_container[id_robot].state.heading)
-                print(id_robot, up_coming_heading, self.robot_container[id_robot].state.position, next_pos)
-                print("___")
         return local_paths
