@@ -52,16 +52,8 @@ if __name__ == "__main__":
     )
 
     while True:
-        local_paths = mediator.update(graph=graph, dt=DT)
-        print("Global paths:")
-        print({id_robot: robot.get_global_path() for id_robot, robot in mediator.get_robot_container().items()})
-        print("Local paths:")
-        print(local_paths)
+        mediator.update(graph=graph, dt=DT)
+        for id_robot, robot in mediator.get_robot_container().items():
+            print(robot)
         print("_" * 10)
-
-        # for id_robot, robot in mediator.get_robot_container().items():
-        #     # heuristic position and heading
-        #     print(robot.state.position)
-        #     print(robot.state.heading)
-
         sleep(DT)

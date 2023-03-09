@@ -137,9 +137,9 @@ class Robot:
         """
         To string
         """
-        return f"Robot(" \
-               f"id_robot={self.id_robot}, " \
-               f"current_position={self.current_position}, " \
-               f"local_path={self.local_path}, " \
-               f"global_path={self.global_path}, " \
-               f"current_to_goal={self.current_to_goal})"
+        return f"Robot(\n" \
+               f"\tid_robot={self.id_robot}\n" \
+               f"\tcurrent_position={self.current_position}\n" \
+               f"\tlocal_path={self.local_path}\n" \
+               f"\tglobal_path={self.global_path}\n" \
+               f"\tstate={self.state}\n)"
