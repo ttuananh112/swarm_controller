@@ -58,4 +58,10 @@ if __name__ == "__main__":
         print("Local paths:")
         print(local_paths)
         print("_" * 10)
+
+        # for id_robot, robot in mediator.get_robot_container().items():
+        #     # heuristic position and heading
+        #     print(robot.state.position)
+        #     print(robot.state.heading)
+
         sleep(DT)
