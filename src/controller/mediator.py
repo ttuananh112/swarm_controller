@@ -9,6 +9,8 @@ import pandas as pd
 from src.common import logger
 from src.common.constants import INFINITY
 from src.common.utils import roll
+from src.graph import Graph
+from src.models import Vector
 from src.models.robot import Robot
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
@@ -209,7 +211,7 @@ class Mediator:
             # the nearest to goal can go
             # the other will stop before intersection
             for i_other_path in i_paths[1:]:
-                i_node_on_path = np.where(new_local_paths[i_other_path] == intersect_node)[0][0]
+                i_node_on_path = np.where(local_paths[i_other_path] == intersect_node)[0][0]
                 new_local_paths[i_other_path][i_node_on_path:] = self.padding_value
         return new_local_paths
 
@@ -235,3 +237,28 @@ class Mediator:
         for id_robot, robot in self.robot_container.items():
             result[id_robot] = [int(node) for node in robot.get_local_path() if node != np.inf]
         return result
+
+    def update(self, graph: Graph, dt: float):
+        local_paths = self.find_local_paths()
+        for id_robot in self.robot_container.keys():
+            if len(local_paths[id_robot]) > 1:
+                curr_id = local_paths[id_robot][0]
+                curr_pos = graph.get_node_by_id(curr_id).position
+                next_id = local_paths[id_robot][1]
+                next_pos = graph.get_node_by_id(next_id).position
+                curr_to_next_pos = next_pos - curr_pos
+                i_pos = Vector(x=1, y=0)
+                up_coming_heading = curr_to_next_pos.angle_between(i_pos) * np.sign(curr_to_next_pos.y or 1)
+
+                # update state of robot
+                self.robot_container[id_robot].update_state(up_coming_heading, dt)
+
+                # update current position if reaching point
+                if self.robot_container[id_robot].state.position == next_pos:
+                    self.robot_container[id_robot].set_current_position(next_id)
+                    self.robot_container[id_robot].state.position = next_pos
+
+                print(self.robot_container[id_robot].state.position, self.robot_container[id_robot].state.heading)
+                print(id_robot, up_coming_heading, self.robot_container[id_robot].state.position, next_pos)
+                print("___")
+        return local_paths

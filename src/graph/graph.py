@@ -7,7 +7,7 @@ import pandas as pd
 
 from src.common.constants import VerticesColumns, EdgesColumns
 from src.graph.exception import NodeNotFound
-from src.models.node import Node, Position
+from src.models import Node, Vector
 
 INFINITY = float("inf")
 
@@ -39,7 +39,7 @@ class Graph:
         for _, row in vertices.iterrows():
             node = Node(
                 id=row[VerticesColumns.ID],
-                position=Position(x=row[VerticesColumns.X], y=row[VerticesColumns.Y])
+                position=Vector(x=row[VerticesColumns.X], y=row[VerticesColumns.Y])
             )
             self.add_vertex(node)
 

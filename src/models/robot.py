@@ -1,6 +1,7 @@
 from typing import List
 
 from src.common.constants import INFINITY
+from src.models import State
 
 
 class Robot:
@@ -8,21 +9,53 @@ class Robot:
     Robot class
     """
 
-    def __init__(self, id_robot: int, global_path: List[int] = ()):
+    def __init__(self, id_robot: int, state: State, global_path: List[int] = ()):
         """
         Init function
         Args:
             id_robot (int): id of robot
+            state (State): state of robot
             global_path (List[int]): global path
         """
         self.id_robot = id_robot
+        self.state = state
+
+        # discrete position
         self.current_position = -1
         self.local_path = []
         self.global_path = []
         self.current_to_goal = []
         self.set_global_path(global_path)
 
+    def set_state(self, state: State):
+        """
+        Set state of robot
+        Args:
+            state:
+
+        Returns:
+
+        """
+        self.state = state
+
+    def update_state(self, up_coming_heading: float, dt: float):
+        """
+        Update state of robot
+        Args:
+            up_coming_heading:
+            dt:
+
+        Returns:
+
+        """
+        self.state.update(up_coming_heading=up_coming_heading, dt=dt)
+
     def is_at_goal(self):
+        """
+        Check whether robot reaching goal
+        Returns:
+
+        """
         return len(self.current_to_goal) == 1
 
     def set_global_path(self, global_path: List[int]):
