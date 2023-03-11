@@ -17,7 +17,7 @@ if __name__ == "__main__":
 
     astar = AStar(graph=graph)
 
-    mediator = Mediator(lookahead=10, bias_intersection=1)
+    mediator = Mediator()
     mediator.add_robot(
         Robot(id_robot=1,
               state=State(position=graph.get_node_by_id(13).position,

@@ -17,3 +17,4 @@ class EdgesColumns:
 
 
 INFINITY = float("inf")
+LOCAL_PATH_LENGTH = 10

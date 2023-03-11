@@ -57,7 +57,7 @@ class Vector:
 
     def magnitude(self) -> float:
         """
-        Magnitude of bector
+        Magnitude of vector
         Returns:
 
         """

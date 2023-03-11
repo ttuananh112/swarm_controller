@@ -1,15 +1,14 @@
 import socket
 
 import src.communication.constants as const
-
-MESSAGE = "Hello, World!"
+from src.communication.messages import RobotMsg, StatusMsg, PathMsg
 
 
 class Sender:
     def __init__(
             self,
-            udp_ip: str = const.UDP_IP,
-            udp_port: int = const.UDP_PORT
+            udp_ip: str,
+            udp_port: int
     ):
         self.udp_ip = udp_ip
         self.udp_port = udp_port
@@ -20,4 +19,7 @@ class Sender:
 
 
 if __name__ == "__main__":
-    Sender().send_message(MESSAGE)
+    Sender(udp_ip=const.SERVER_UDP_IP, udp_port=const.SERVER_UDP_PORT).send_message(RobotMsg(id=1, pos=1, vel=1))
+    Sender(udp_ip=const.SERVER_UDP_IP, udp_port=const.SERVER_UDP_PORT).send_message(StatusMsg(True))
+    Sender(udp_ip=const.SERVER_UDP_IP, udp_port=const.SERVER_UDP_PORT).send_message(
+        PathMsg(id=2, path=[i for i in range(10)]))

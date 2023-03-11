@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 from src.common import logger
-from src.common.constants import INFINITY
+from src.common.constants import INFINITY, LOCAL_PATH_LENGTH
 from src.common.utils import roll
 from src.graph import Graph
 from src.models import Vector
@@ -24,7 +24,7 @@ class Mediator:
     def __init__(
             self,
             robot_container: Dict[int, Robot] = None,
-            lookahead: int = 5,
+            lookahead: int = LOCAL_PATH_LENGTH,
             bias_intersection: int = 1
     ):
         """

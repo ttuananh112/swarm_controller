@@ -1,3 +1,18 @@
-UDP_IP = "127.0.0.1"
-UDP_PORT = 5005
+from src.common.constants import LOCAL_PATH_LENGTH
+
+# connection
+SERVER_UDP_IP = "127.0.0.1"
+SERVER_UDP_PORT = 5000
 BUFFER_SIZE = 1024
+
+# messages
+START = 0
+STOP = 0
+
+STATUS_MSG_FORMAT = "BB?B"
+ROBOT_MSG_FORMAT = "BBiifB"
+PATH_MSG_FORMAT = f"BBi{''.join(['i' for _ in range(LOCAL_PATH_LENGTH)])}B"
+
+STATUS_MSG_TYPE = 0
+ROBOT_MSG_TYPE = 1
+PATH_MSG_TYPE = 2

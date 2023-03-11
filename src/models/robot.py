@@ -84,6 +84,7 @@ class Robot:
         Args:
             current_position (int): position as node id
         """
+
         self.current_position = current_position
         self.update_current_to_goal()
 
@@ -109,7 +110,7 @@ class Robot:
         Returns:
             (List[int])
         """
-        return self.local_path
+        return [int(node_id) for node_id in self.local_path if node_id != INFINITY]
 
     def update_current_to_goal(self):
         """
@@ -139,7 +140,7 @@ class Robot:
         """
         return f"Robot(\n" \
                f"\tid_robot={self.id_robot}\n" \
-               f"\tcurrent_position={self.current_position}\n" \
-               f"\tlocal_path={self.local_path}\n" \
-               f"\tglobal_path={self.global_path}\n" \
+               f"\tcurrent_position={self.get_current_position()}\n" \
+               f"\tlocal_path={self.get_local_path()}\n" \
+               f"\tglobal_path={self.get_global_path()}\n" \
                f"\tstate={self.state}\n)"
