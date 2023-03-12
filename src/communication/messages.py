@@ -1,5 +1,5 @@
 from struct import pack, unpack
-from typing import List, Tuple, Any
+from typing import List, Tuple
 
 import src.communication.constants as const
 
@@ -45,19 +45,17 @@ class Message:
         Returns:
 
         """
-        return unpack(cls.msg_format, byte_arr)
+        raise NotImplementedError
 
     @staticmethod
-    def decode(byte_arr) -> Tuple[int, Tuple[Any]]:
+    def decode(byte_arr):
         """
         Decode msg base on its msg_type
         Args:
             byte_arr:
 
         Returns:
-            Tuple[int, Tuple]
-                int: msg_type
-                Tuple: unpacked_data
+            Message object
         """
         if len(byte_arr) < 3:
             raise MessageIsNotReliable("Len of byte_arr must >= 3")
@@ -71,7 +69,10 @@ class Message:
         if msg_type not in MAPPING:
             raise KeyError(f"Not valid msg_type, got {msg_type}")
 
-        return msg_type, MAPPING[msg_type].decode_by_format(byte_arr)
+        return MAPPING[msg_type].decode_by_format(byte_arr)
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}:{str(self.__dict__)}"
 
 
 class PathMsg(Message):
@@ -90,6 +91,12 @@ class PathMsg(Message):
         self.path = path
 
         self.data_encode: Tuple = (self.id, *self.path)
+
+    @classmethod
+    def decode_by_format(cls, byte_arr):
+        start, msg_type, *data, stop = unpack(cls.msg_format, byte_arr)
+        id, *path = data
+        return PathMsg(id=id, path=path)
 
 
 class RobotMsg(Message):
@@ -111,6 +118,12 @@ class RobotMsg(Message):
 
         self.data_encode: Tuple = (self.id, self.pos, self.vel)
 
+    @classmethod
+    def decode_by_format(cls, byte_arr):
+        start, msg_type, *data, stop = unpack(cls.msg_format, byte_arr)
+        id, pos, vel = data
+        return RobotMsg(id=id, pos=pos, vel=vel)
+
 
 class StatusMsg(Message):
     msg_format: str = const.STATUS_MSG_FORMAT
@@ -125,6 +138,11 @@ class StatusMsg(Message):
         super().__init__()
         self.is_success = is_success
         self.data_encode = (is_success,)
+
+    @classmethod
+    def decode_by_format(cls, byte_arr):
+        start, msg_type, is_success, stop = unpack(cls.msg_format, byte_arr)
+        return StatusMsg(is_success=is_success)
 
 
 MAPPING = {

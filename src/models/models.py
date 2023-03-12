@@ -123,6 +123,12 @@ class State:
     heading: float = 0.  # [-pi, pi]
     omega: float = 0.  # rotation velocity
 
+    def set_position(self, pos):
+        self.position = pos
+
+    def set_velocity(self, vel):
+        self.velocity = vel
+
     def step_forward(self, dt: float):
         """
         Go ahead

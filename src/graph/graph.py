@@ -50,6 +50,7 @@ class Graph:
                 v_id=row[EdgesColumns.V],
                 weight=row[EdgesColumns.WEIGHT]
             )
+        return self
 
     def add_vertex(self, node: Node):
         """

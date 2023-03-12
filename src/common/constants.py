@@ -16,5 +16,17 @@ class EdgesColumns:
     WEIGHT = "weight"  # weight of edge
 
 
+class RobotsColumns:
+    """
+    Class to define columsn of robots.csv
+    """
+    ID = "id"
+    START_NODE = "start_node"
+    STOP_NODE = "stop_node"
+    VELOCITY = "vel"
+    HEADING = "heading"
+    OMEGA = "omega"
+
+
 INFINITY = float("inf")
 LOCAL_PATH_LENGTH = 10

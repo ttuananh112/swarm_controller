@@ -7,10 +7,11 @@ import numpy as np
 import pandas as pd
 
 from src.common import logger
-from src.common.constants import INFINITY, LOCAL_PATH_LENGTH
+from src.common.constants import INFINITY, LOCAL_PATH_LENGTH, RobotsColumns
 from src.common.utils import roll
+from src.controller import AStar
 from src.graph import Graph
-from src.models import Vector
+from src.models import Vector, State
 from src.models.robot import Robot
 
 warnings.filterwarnings("ignore", category=RuntimeWarning)
@@ -33,12 +34,64 @@ class Mediator:
             lookahead (int): number of steps in local path
             bias_intersection (int): bias of steps while checking intersection
         """
+        self.graph = None
+        self.astar = None
+
         self.robot_container: Dict[int, Robot] = robot_container or {}
         self.global_paths: List[List[int]] = self.get_global_paths()
 
         self.lookahead = lookahead
         self.bias_intersection = bias_intersection
         self.padding_value = INFINITY
+
+    def load_graph(self, vertices_path: str, edges_path: str):
+        """
+        Load graph from files
+        Args:
+            vertices_path:
+            edges_path:
+
+        Returns:
+
+        """
+        self.graph = Graph().load_data(vertices_path=vertices_path, edges_path=edges_path)
+        self.astar = AStar(graph=self.graph)
+
+    def update_graph(self, graph: Graph):
+        """
+        Update graph
+        Args:
+            graph:
+
+        Returns:
+
+        """
+        self.graph = graph
+        self.astar = self.astar.set_graph(self.graph)
+
+    def get_graph(self):
+        return self.graph
+
+    def add_robots_from_file(self, robots_path: str):
+        """
+        Add robots from file
+        Args:
+            robots_path:
+
+        Returns:
+
+        """
+        df = pd.read_csv(robots_path)
+        for i, row in df.iterrows():
+            self.add_robot(
+                Robot(id_robot=int(row[RobotsColumns.ID]),
+                      state=State(position=self.graph.get_node_by_id(row[RobotsColumns.START_NODE]).position,
+                                  velocity=row[RobotsColumns.VELOCITY],
+                                  heading=row[RobotsColumns.HEADING],
+                                  omega=row[RobotsColumns.OMEGA]),
+                      global_path=[int(i) for i in self.astar.find_path(
+                          row[RobotsColumns.START_NODE], row[RobotsColumns.STOP_NODE])])
+            )
 
     def get_robot_container(self) -> Dict[int, Robot]:
         """
@@ -47,6 +100,17 @@ class Mediator:
             (Dict[int, Robot])
         """
         return self.robot_container
+
+    def get_robot_by_id(self, id: int):
+        """
+        Get robot by id
+        Args:
+            id (int): robot id
+
+        Returns:
+
+        """
+        return self.robot_container[id]
 
     def add_robot(self, robot: Robot):
         """
@@ -238,14 +302,14 @@ class Mediator:
             result[id_robot] = [int(node) for node in robot.get_local_path() if node != np.inf]
         return result
 
-    def update(self, graph: Graph, dt: float):
+    def update(self, dt: float):
         local_paths = self.find_local_paths()
         for id_robot in self.robot_container.keys():
             if len(local_paths[id_robot]) > 1:
                 curr_id = local_paths[id_robot][0]
-                curr_pos = graph.get_node_by_id(curr_id).position
+                curr_pos = self.graph.get_node_by_id(curr_id).position
                 next_id = local_paths[id_robot][1]
-                next_pos = graph.get_node_by_id(next_id).position
+                next_pos = self.graph.get_node_by_id(next_id).position
                 curr_to_next_pos = next_pos - curr_pos
                 i_pos = Vector(x=1, y=0)
                 up_coming_heading = curr_to_next_pos.angle_between(i_pos) * np.sign(curr_to_next_pos.y or 1)

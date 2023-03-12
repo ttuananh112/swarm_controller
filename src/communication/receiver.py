@@ -45,9 +45,7 @@ class Receiver:
             self.container.append(Message.decode(data))
 
     def get_data(self):
-        if len(self.container) > 0:
-            return self.container.pop(0)
-        return None
+        return [self.container.pop(0) for _ in range(len(self.container))]
 
 
 if __name__ == "__main__":
@@ -56,7 +54,7 @@ if __name__ == "__main__":
         try:
             robot_data = recv.get_data()
             if robot_data:
-                print(robot_data)
+                print(*robot_data, sep="\n")
 
         except KeyboardInterrupt:
             recv.stop()
